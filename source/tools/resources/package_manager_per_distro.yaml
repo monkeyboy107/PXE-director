@@ -1,0 +1,4 @@
+distro:
+  Fedora: dnf
+  '"CentOS Linux"': yum
+  Ubuntu: apt-get

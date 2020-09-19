@@ -32,7 +32,7 @@ def new_mac(mac):
         return write_new_mac(mac, coordination, locked)
 
 def write_new_mac(mac, coordination_path, is_locked_path):
-    while yaml_to_dict(is_locked_path)['locked'] is True:
+    while yaml_to_dict(is_locked_path)['coordination'] is True:
         time.sleep(10)
     locked = yaml_to_dict(is_locked_path)
     locked['coordination'] = True
