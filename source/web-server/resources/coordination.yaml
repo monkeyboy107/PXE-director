@@ -1,0 +1,3 @@
+default:
+  comment: default menu entry
+  ipxe-path: https://10.0.0.1

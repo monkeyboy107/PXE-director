@@ -13,7 +13,7 @@ def lock_checker():
     count = 0
     try:
         while True:
-            if tools.yaml_to_dict(tools.get_correct_file(locked))['locked']:
+            if tools.yaml_to_dict(tools.get_correct_file(locked))['coordination']:
                 count = count + 1
                 time.sleep(1)
             else:
@@ -22,3 +22,9 @@ def lock_checker():
                 tools.dict_to_yaml(locked, {'coordination': False})
     except TypeError:
         lock_checker()
+
+def get_path():
+    return locked
+
+if __name__ == '__main__':
+    get_path()
