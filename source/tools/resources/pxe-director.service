@@ -1,0 +1,11 @@
+[Unit]
+Description=This is the PXE director
+
+[Service]
+Type=simple
+ExecStart=/bin/python3 /etc/pxe-director/web-server/main.py
+User=pxe-director
+WorkingDirectory=/etc/pxe-director/web-server/
+
+[Install]
+WantedBy=multi-user.target

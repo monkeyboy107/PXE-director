@@ -1,0 +1,1 @@
+chain http://ip/checkin/${net0/mac}

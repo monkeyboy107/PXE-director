@@ -1,0 +1,6 @@
+b0:6e:bf:5f:1d:a2:
+  comment: b0:6e:bf:5f:1d:a2
+  ipxe-path: https://10.0.0.1
+default:
+  comment: default menu entry
+  ipxe-path: https://10.0.0.1

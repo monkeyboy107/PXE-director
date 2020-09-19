@@ -45,7 +45,7 @@ def edit_host(mac, pxe, comment):
     html = html.replace('MAC-address', mac)
     html = html.replace('pxe-server-entry', pxe)
     html = html.replace('client-name', comment)
-    return html
+    return top_bottom(html)
 
 
 try:
