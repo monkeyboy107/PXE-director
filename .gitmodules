@@ -1,0 +1,3 @@
+[submodule "dependencies/ipxe"]
+	path = dependencies/ipxe
+	url = git://git.ipxe.org/ipxe.git
