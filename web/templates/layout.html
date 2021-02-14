@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        {% for stylesheet in css %}<link rel="stylesheet" href="{{ stylesheet }}">
+        {% endfor %}
+    </head>
+    <body>
+        <div class="w3-black kerley-links kerley-middle">
+            {% for name, href in pages %}<a href="{{ href }}">{{ name }}</a> {% endfor %}
+        </div>
+        </div>
+        <div class="kerley-middle">
+            {% block body %}{% endblock %}
+        </div>
+</body>
+</html>
