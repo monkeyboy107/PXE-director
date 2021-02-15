@@ -7,7 +7,7 @@ settings = common_tools.correct_path('settings/html_renderer.yaml')
 
 
 def get_html(debug=False, template='layout.html', title='Title', statics_dir='static', css=['style.css'],
-             is_logged_on=False):
+             is_logged_on=False, user=None):
     stylesheets = []
     links = [common_tools.yaml_to_dict(settings)['links_path']]
 

@@ -1,0 +1,5 @@
+description: default description
+ipxe-script:
+- dhcp
+- chain http://boot.ipxe.org/demo/boot.php
+mac: default

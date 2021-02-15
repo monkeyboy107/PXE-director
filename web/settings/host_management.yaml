@@ -1,0 +1,3 @@
+hosts: hosts
+default_settings: hosts\default.yaml
+default_fake_mac: default

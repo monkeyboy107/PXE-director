@@ -1,8 +1,8 @@
 from flask import Flask, request, flash, url_for, redirect, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
-from is_safe_url import is_safe_url
 import html_renderer
 import common_tools
+
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -12,32 +12,39 @@ login_manager.init_app(app)
 class User(UserMixin):
     def __init__(self, username):
         super().__init__()
-        self.id = self
+        self.id = username
+        # self.id = self
 
     def get_id(self):
+        # return self
         return self.id
+
+    def is_authenticated(self):
+        return True
+
+    def get(self):
+        return self
 
 
 @app.route('/')
 @login_manager.unauthorized_handler
 def index():
-    return html_renderer.get_html(title='Index', template='index.html')
+    return html_renderer.get_html(title='Index', template='index.html', user='')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    form = request.form
     if request.method == 'POST':
-        if common_tools.test_auth(request.form['username'], request.form['password']):
-            flash('Login Successful.')
-            next = request.args.get('next')
-            user = User(request.form['username'])
-            # user = User()
-            user = login_manager.user_loader(user)
-            login_user(user)
-            # if not is_safe_url(next, {host}) or not debug:
-            #     return abort(400)
-            return redirect(next or url_for('login'))
-    return html_renderer.get_html(title='Login', template='login.html')
+        user = form['username']
+        password = form['password']
+        if not common_tools.test_auth(user, password):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(User(user))
+        # return redirect(url_for('index'))
+        return redirect(url_for('login'))
+    return html_renderer.get_html(template='login.html', title='Sign In')
 
 
 @app.route('/settings')
@@ -51,6 +58,12 @@ def settings():
 def logout():
     logout_user()
     return redirect(index())
+
+
+@app.route('/register_host/<mac_address>')
+def register_host(mac_address):
+    pass
+
 
 
 @login_manager.user_loader

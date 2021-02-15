@@ -6,7 +6,6 @@ def correct_path(path):
     dir_slash = '/'
     if os.name == 'nt':
         dir_slash = '\\'
-
     path = path.replace('/', dir_slash)
     path = path.replace('\\', dir_slash)
     return path
@@ -33,5 +32,6 @@ def test_auth(username, password):
 
 
 if __name__ == '__main__':
-    print(test_auth('Test', 'Test'))
-    print(test_auth('admin', 'password'))
+    # print(test_auth('Test', 'Test'))
+    # print(test_auth('admin', 'password'))
+    print(correct_path('hosts\\default.yaml'))
