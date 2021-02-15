@@ -1,4 +1,3 @@
-from jinja2 import Environment, FileSystemLoader, select_autoescape
 from flask import url_for, render_template
 import common_tools
 
