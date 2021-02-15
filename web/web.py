@@ -1,5 +1,6 @@
 from flask import Flask, request, flash, url_for, redirect, abort
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
+import host_management
 import html_renderer
 import common_tools
 
@@ -62,8 +63,18 @@ def logout():
 
 @app.route('/register_host/<mac_address>')
 def register_host(mac_address):
-    pass
+    if host_management.is_registered(mac_address):
+        return 'Already registered!'
+    else:
+        return host_management.register_host(mac_address)
 
+
+@app.route('/boot_host/<mac_address>')
+def boot_host(mac_address):
+    if host_management.is_registered(mac_address):
+        script = host_management.get_info('ipxe-script', mac=mac_address)
+        script = '\r\n'.join(script['ipxe-script'])
+        return str(script)
 
 
 @login_manager.user_loader
