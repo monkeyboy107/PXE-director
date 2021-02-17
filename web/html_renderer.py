@@ -1,5 +1,4 @@
 from flask import url_for, render_template
-import host_management
 import common_tools
 
 
@@ -7,7 +6,7 @@ settings = common_tools.correct_path('settings/html_renderer.yaml')
 
 
 def get_html(debug=False, template='layout.html', title='Title', statics_dir='static', css=['style.css'],
-             is_logged_on=False, user=None):
+             is_logged_on=False, user=None, hosts=None):
     user = str(user)
     if user[0] != '<':
         is_logged_on = True
@@ -23,8 +22,6 @@ def get_html(debug=False, template='layout.html', title='Title', statics_dir='st
     for dict in web_links:
         links.append(get_links(common_tools.yaml_to_dict(dict)))
     passable = []
-
-    hosts = host_management.get_info('host')
 
     # This combines the lists for jinja
     for element in links:
@@ -62,6 +59,6 @@ def get_links(links_dict):
 
 
 if '__main__' == __name__:
-    # print(get_html(debug=True))
-    get_html(debug=True, is_logged_on=True)
+    print(get_html(debug=True, is_logged_on=True, is_host=True))
+    # get_html(debug=True, is_logged_on=True, is_host=True)
     # print(get_links(settings))

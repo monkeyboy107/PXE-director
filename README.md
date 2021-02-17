@@ -16,9 +16,11 @@ This is intended to help you manage PXE hosts through automating iPXE
 * Authentication
 * Host management
 * Automated host registration
+* Host management through web
 
 ## Future features
-* Host management through web
+* Web based adding users
+* Hashed passwords
 * TLS
 
 ## Credits

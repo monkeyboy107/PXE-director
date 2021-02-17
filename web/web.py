@@ -51,7 +51,26 @@ def login():
 @app.route('/hosts')
 def hosts():
     if is_signed_in(current_user) is True:
-        return html_renderer.get_html(template='hosts.html', title='List of hosts', user=current_user)
+        return html_renderer.get_html(template='hosts.html', title='List of hosts', user=current_user,
+                                      hosts=host_management.get_info('host'))
+    else:
+        return is_signed_in(current_user)
+
+
+@app.route('/hosts/<mac_address>', methods=['GET', 'POST'])
+def edit_host(mac_address):
+    if is_signed_in(current_user) is True:
+        if request.method == 'POST':
+            description = request.form['description']
+            mac = request.form['mac']
+            script = request.form['ipxe-script'].split('\r\n')
+            host_management.update_host(mac, mac, 'mac')
+            host_management.update_host(mac, script, 'ipxe-script')
+            host_management.update_host(mac, description, 'description')
+            return redirect(url_for('hosts'))
+        else:
+            return html_renderer.get_html(template='edit_host.html',
+                                          hosts=host_management.get_info('host', mac=mac_address))
     else:
         return is_signed_in(current_user)
 

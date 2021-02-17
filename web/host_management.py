@@ -57,11 +57,14 @@ def is_registered(mac):
 
 
 # This will update the mac address of a specific host
-def update_description(mac, description):
+def update_host(mac, value, key):
+    if value == 'mac':
+        if is_valid_mac(value) is False:
+            return False
     # This will define the host as its dictionary
     host = get_info('host', mac=mac)
-    # This will change the description to the desired description
-    host['description'] = description
+    # This will change the desired value
+    host[key] = value
     # This will set the save path
     host_path = settings['hosts'] + '/' + host['mac'].replace(':', '') + '.yaml'
     # This will make sure it is set correctly so it works in windows
@@ -122,7 +125,8 @@ if __name__ == '__main__':
     print(is_valid_mac(testing_mac))
     print(register_host(testing_mac))
     print(is_registered(testing_mac))
-    print(update_description(testing_mac, testing_description))
-    print(remove_host(testing_mac))
-    for desired_info in ['host', 'mac', 'description', 'ipxe-script']:
-        print(get_info(desired_info))
+    # for key in ['host', 'mac', 'description', 'ipxe-script']:
+    #     print(update_host(testing_mac, testing_description, key))
+    # print(remove_host(testing_mac))
+    # for desired_info in ['host', 'mac', 'description', 'ipxe-script']:
+    #     print(get_info(desired_info))
