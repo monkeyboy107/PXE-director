@@ -59,7 +59,7 @@ def is_registered(mac):
 # This will update the mac address of a specific host
 def update_description(mac, description):
     # This will define the host as its dictionary
-    host = get_info('mac', mac=mac)
+    host = get_info('host', mac=mac)
     # This will change the description to the desired description
     host['description'] = description
     # This will set the save path
@@ -97,19 +97,22 @@ def get_info(desired_info, mac=None):
         if desired_info == 'host':
             # This fills the information list with all the host information
             information.append(common_tools.yaml_to_dict(host))
-        # This checks to see if the mac variable has been changed
-        elif mac is not None:
-            # This will just return the list that is requested
-            for desired_mac in get_info('host'):
-                if mac == desired_mac['mac']:
-                    return desired_mac
-        # This will raise an error if the desired_info was set wrong and hopefully explain the correct info
         else:
             try:
                 information.append(common_tools.yaml_to_dict(host)[desired_info])
             except KeyError:
                 raise KeyError('Expected: host, mac, description, or ipxe-script as a ' + str(type('string')) +
                                '. Did not except ' + desired_info + ' as a ' + str(type(desired_info)))
+        # This checks to see if the mac variable has been changed
+        if mac is not None:
+            # This will just return the list that is requested
+            for desired_mac in get_info('host'):
+                if mac == desired_mac['mac']:
+                    if desired_info == 'host':
+                        return desired_mac
+                    else:
+                        return desired_mac[desired_info]
+        # This will raise an error if the desired_info was set wrong and hopefully explain the correct info
     return information
 
 

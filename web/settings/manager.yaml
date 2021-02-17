@@ -1,7 +1,7 @@
 debug: True
 debug_port: 5000
-#debug_IP: 127.0.0.1
-debug_IP: 0.0.0.0
+debug_IP: 127.0.0.1
+#debug_IP: 0.0.0.0
 http_port: 80
 https_port: 443
 IP: 0.0.0.0

@@ -1,4 +1,5 @@
 from flask import url_for, render_template
+import host_management
 import common_tools
 
 
@@ -23,6 +24,8 @@ def get_html(debug=False, template='layout.html', title='Title', statics_dir='st
         links.append(get_links(common_tools.yaml_to_dict(dict)))
     passable = []
 
+    hosts = host_management.get_info('host')
+
     # This combines the lists for jinja
     for element in links:
         passable.append(element)
@@ -44,7 +47,7 @@ def get_html(debug=False, template='layout.html', title='Title', statics_dir='st
         else:
             url_for(statics_dir, filename=css_file)
     if not debug:
-        return render_template(template, title=title, css=stylesheets, pages=links, user=user)
+        return render_template(template, title=title, css=stylesheets, pages=links, user=user, hosts=hosts)
 
 
 def get_links(links_dict):

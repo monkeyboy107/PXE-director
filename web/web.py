@@ -48,6 +48,14 @@ def login():
     return html_renderer.get_html(template='login.html', title='Sign In', user=current_user)
 
 
+@app.route('/hosts')
+def hosts():
+    if is_signed_in(current_user) is True:
+        return html_renderer.get_html(template='hosts.html', title='List of hosts', user=current_user)
+    else:
+        return is_signed_in(current_user)
+
+
 @app.route('/settings')
 def settings():
     if is_signed_in(current_user) is True:
