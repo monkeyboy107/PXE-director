@@ -1,18 +1,27 @@
-**This is a simple web server written in Flask to direct PXE**
-***
-**To install do this**
+## Prerequisite
+To get started first make a venv in python
+It will need the following packages
+1. flask
+2. flask-login
+3. secrets
+4. pyyaml
 
-Not yet finished
-1. Go to bin/
-2. Install python3 and pip install pyyaml
-3. run setup.sh
-***
-**How to auto do an answer file**
+## Starting it up
+Go to the web folder and launch the manager.py within the venv
 
-Not yet implemented
+## Goals of this project
+This is intended to help you manage PXE hosts through automating iPXE
 
-Put a file called answer_file.yaml
-***
-**How to format the auto install file**
+## Features
+* Authentication
+* Host management
+* Automated host registration
+* Host management through web
 
-Will fill in later
+## Future features
+* Web based adding users
+* Hashed passwords
+* TLS
+
+## Credits
+* Isaac Kerley

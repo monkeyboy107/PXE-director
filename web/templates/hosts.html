@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+    {% block body %}
+    <table id="hosts">
+        <tr>
+            <td> description </td>
+            <td> mac address </td>
+            <td> edit </td>
+        </tr>
+        {% for host in hosts %}
+        <tr>
+                <td>{{ host['description'] }}</td>
+                <td>{{ host['mac'] }}</td>
+                <td><a href="/hosts/{{ host['mac'] }}"> edit </a></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

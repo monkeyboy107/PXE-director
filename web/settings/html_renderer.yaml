@@ -1,0 +1,5 @@
+html_path: templates
+autoescape:
+  - html
+links_path: settings/links.yaml
+logged_on_links_path: settings/logged_on_links.yaml

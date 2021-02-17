@@ -1,0 +1,19 @@
+.kerley-right-margin {
+  margin-right: 20 %;
+  float: right;
+}
+.kerley-left-margin {
+  margin-left: 20 %;
+  float: left;
+}
+.kerley-links {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding 5px;
+}
+.kerley-middle {
+  position: static;
+  padding-left: 20%;
+  padding-right: 20%;
+}

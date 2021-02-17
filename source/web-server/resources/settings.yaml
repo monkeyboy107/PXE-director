@@ -1,6 +1,0 @@
-production:
-  port: 8080
-  host: 0.0.0.0
-debug:
-  port: 5000
-  host: 127.0.0.1

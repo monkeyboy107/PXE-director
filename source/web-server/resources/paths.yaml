@@ -1,6 +1,0 @@
-settings: resources/settings.yaml
-production: resources/production.yaml
-coordination: resources/coordination.yaml
-locked: resources/locked_files.yaml
-edit_host: Tools/resources/Blank_menu_page.html
-top_bottom: Tools/resources/Top_and_bottom.html
