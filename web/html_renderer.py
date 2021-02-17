@@ -7,25 +7,30 @@ settings = common_tools.correct_path('settings/html_renderer.yaml')
 
 def get_html(debug=False, template='layout.html', title='Title', statics_dir='static', css=['style.css'],
              is_logged_on=False, user=None):
+    user = str(user)
+    if user[0] != '<':
+        is_logged_on = True
     stylesheets = []
-    links = [common_tools.yaml_to_dict(settings)['links_path']]
+    links = []
+    web_links = [common_tools.yaml_to_dict(settings)['links_path']]
 
     # This check if the user is signed in so it can add more links
     if is_logged_on:
-        links.append(common_tools.yaml_to_dict(settings)['logged_on_links_path'])
+        web_links.append(common_tools.yaml_to_dict(settings)['logged_on_links_path'])
 
     # This will prep the list being handed to jinja
-    for dict in list(links):
+    for dict in web_links:
         links.append(get_links(common_tools.yaml_to_dict(dict)))
-        # links.append(get_links(common_tools.yaml_to_dict(common_tools.yaml_to_dict(dict))))
-        print(dict)
-        links.pop(0)
     passable = []
 
     # This combines the lists for jinja
     for element in links:
         passable.append(element)
-    links = passable[0]
+
+    if is_logged_on:
+        links = passable[0] + passable[1]
+    else:
+        links = passable[0]
 
     # This will prep the css link for jinja and flask
     for css_file in css:
@@ -33,12 +38,13 @@ def get_html(debug=False, template='layout.html', title='Title', statics_dir='st
 
         # This will either print out what is being sent to flask or send it to flask
         if debug:
-            print(statics_dir, css_file)
-            print(stylesheets)
+            pass
+            # print(statics_dir, css_file)
+            # print(stylesheets)
         else:
             url_for(statics_dir, filename=css_file)
-
-    return render_template(template, title=title, css=stylesheets, pages=links)
+    if not debug:
+        return render_template(template, title=title, css=stylesheets, pages=links, user=user)
 
 
 def get_links(links_dict):

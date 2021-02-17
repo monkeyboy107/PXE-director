@@ -1,5 +1,5 @@
 from flask import Flask, request, flash, url_for, redirect, abort
-from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
+from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
 import host_management
 import html_renderer
 import common_tools
@@ -30,7 +30,7 @@ class User(UserMixin):
 @app.route('/')
 @login_manager.unauthorized_handler
 def index():
-    return html_renderer.get_html(title='Index', template='index.html', user='')
+    return html_renderer.get_html(title='Index', template='index.html', user=current_user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -45,20 +45,21 @@ def login():
         login_user(User(user))
         # return redirect(url_for('index'))
         return redirect(url_for('login'))
-    return html_renderer.get_html(template='login.html', title='Sign In')
+    return html_renderer.get_html(template='login.html', title='Sign In', user=current_user)
 
 
 @app.route('/settings')
-@login_required
 def settings():
-    return html_renderer.get_html(title='Settings', template='settings.html')
+    if is_signed_in(current_user) is True:
+        return html_renderer.get_html(title='Settings', template='settings.html', user=current_user)
+    else:
+        return is_signed_in(current_user)
 
 
 @app.route('/logout')
-@login_required
 def logout():
     logout_user()
-    return redirect(index())
+    return redirect(url_for('index'))
 
 
 @app.route('/register_host/<mac_address>')
@@ -80,6 +81,13 @@ def boot_host(mac_address):
 @login_manager.user_loader
 def load_user(user_id):
     return User.get(user_id)
+
+
+def is_signed_in(current_user):
+    if str(current_user)[0] == '<':
+        return redirect(url_for('index'))
+    else:
+        return True
 
 
 host = '127.0.0.1'
