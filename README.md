@@ -1,10 +1,10 @@
 ## Prerequisite
 To get started first make a venv in python
 It will need the following packages
-1. flask
-2. flask-login
-3. secrets
-4. pyyaml
+* flask
+* flask-login
+* secrets
+* pyyaml
 
 ## Starting it up
 Go to the web folder and launch the manager.py within the venv
@@ -17,10 +17,10 @@ This is intended to help you manage PXE hosts through automating iPXE
 * Host management
 * Automated host registration
 * Host management through web
+* Web based user management
+* Hashed passwords
 
 ## Future features
-* Web based adding users
-* Hashed passwords
 * TLS
 
 ## Credits
