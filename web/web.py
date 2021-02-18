@@ -101,32 +101,48 @@ def manage_users():
         return is_signed_in(current_user)
 
 
-@app.route('/manage_users/<username>', methods=['GET', 'POST'])
+@app.route('/manage_users/update/<username>')
 def update_user(username):
     if is_signed_in(current_user):
+        users_dir = common_tools.yaml_to_dict(common_tools.correct_path('settings/authentication.yaml'))['auth_dir']
+        for user in os.listdir(users_dir):
+            dict_user = common_tools.yaml_to_dict(common_tools.correct_path(users_dir + '/' + user))
+            if dict_user['username'] == username:
+                return render_template('user.html', title='Update user ' + username, css=common_tools.get_css(),
+                                       pages=common_tools.get_links(is_logged_on=True), user=dict_user,
+                                       algorithms=types_of_hash)
+        flash('User not found')
+        return redirect(url_for('manage_users'))
+    else:
+        return is_signed_in(current_user)
+
+
+@app.route('/manage_users/delete/<username>')
+def delete_user(username):
+    if is_signed_in(current_user):
+        users_dir = common_tools.yaml_to_dict(common_tools.correct_path('settings/authentication.yaml'))['auth_dir']
+        for user in os.listdir(users_dir):
+            dict_user = common_tools.yaml_to_dict(common_tools.correct_path(users_dir + '/' + user))
+            if dict_user['username'] == username:
+                common_tools.delete_user(username)
+                return redirect(url_for('manage_users'))
+        flash('User not found')
+        return redirect(url_for('manage_users'))
+    else:
+        return is_signed_in(current_user)
+
+
+@app.route('/new_user', methods=['GET', 'POST'])
+def add_user():
+    if is_signed_in(current_user) is True:
         if request.method == 'POST':
             if not request.form['password'] == '':
                 common_tools.add_user(request.form['username'], request.form['password'], request.form['salt'],
                                       request.form['algorithm'])
             return redirect(url_for('manage_users'))
         else:
-            users_dir = common_tools.yaml_to_dict(common_tools.correct_path('settings/authentication.yaml'))['auth_dir']
-            for user in os.listdir(users_dir):
-                dict_user = common_tools.yaml_to_dict(common_tools.correct_path(users_dir + '/' + user))
-                if dict_user['username'] == username:
-                    return render_template('user.html', title='Update user ' + username, css=common_tools.get_css(),
-                                           pages=common_tools.get_links(is_logged_on=True), user=dict_user)
-            flash('User not found')
-            return redirect(url_for('manage_users'))
-    else:
-        return is_signed_in(current_user)
-
-
-@app.route('/new_user')
-def add_user():
-    if is_signed_in(current_user) is True:
-        return render_template('user.html', title='Add a user', pages=common_tools.get_links(is_logged_on=True),
-                               css=common_tools.get_css())
+            return render_template('user.html', title='Add a user', pages=common_tools.get_links(is_logged_on=True),
+                               css=common_tools.get_css(), user={'username', 'salt', 'hash'}, algorithms=types_of_hash)
     else:
         return is_signed_in(current_user)
 
@@ -165,10 +181,9 @@ def is_signed_in(current_user):
         return True
 
 
-
 host = '127.0.0.1'
 debug = False
 login_manager.login_view = 'user.login'
 login_manager.login_message = 'Welcome'
-
+types_of_hash = ['sha1', 'sha224', 'sha256', 'sha384', 'sha512', 'blake2b', 'blake2s', 'md5', 'plaintext']
 

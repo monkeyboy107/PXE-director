@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block body %}
-<form action="/manage_users/{{ user['username'] }}" method="POST">
+<form action="/new_user" method="POST">
         <table>
             <tr>
                 <td> <label for="username"> username </label> </td>
@@ -12,7 +12,12 @@
                 <td> <input name="username" type="text" value="{{ user['username'] }}"> </td>
                 <td> <input name="password" type="password" value=""> </td>
                 <td> <input name="salt" type="text" value="{{ user['salt'] }}"> </td>
-                <td> <input name="algorithm" type="text" value="{{ user['hash'] }}"> </td>
+                <td> <select name="algorithm" id="algorithm" onselect="{{ user['hash'] }}">
+                        {% for algorithm in algorithms %}
+                        <option value="{{ algorithm }}"> {{ algorithm }} </option>
+                        {% endfor %}
+<!--                        <option value="{{ user['hash'] }}"> {{ user['hash'] }} </option>-->
+                    </select>
             </tr>
         </table>
     <button type="submit">Update</button>

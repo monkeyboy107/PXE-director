@@ -71,6 +71,7 @@ def get_css(css=['style.css'], statics_dir='static', debug=False):
 
 
 def hash_password(password, hash, *salts):
+    hash = hash.lower()
     if 'sha1' == hash:
         hashed = hashlib.sha1()
     elif 'sha224' == hash:
@@ -120,16 +121,24 @@ def add_user(username, password, salt, hash):
     return user
 
 
-def load_user(username):
-    pass
+def delete_user(username):
+    folder = yaml_to_dict(correct_path('settings/authentication.yaml'))['auth_dir']
+    users_folder = os.listdir(folder)
+    for user in users_folder:
+        user_yaml = correct_path(folder + '/' + user)
+        if username == yaml_to_dict(user_yaml)['username']:
+            os.remove(user_yaml)
+            return user_yaml
+    return False
 
 
 settings = correct_path('settings/common_tools.yaml')
 
 
 if __name__ == '__main__':
-    print(test_auth('test', 'test'))
+    # print(test_auth('test', 'test'))
     # print(test_auth('admin', 'password'))
     # print(correct_path('hosts\\default.yaml'))
     # print(get_links(is_logged_on=True))
-    print(add_user('admin', 'password', '', 'sha512'))
+    # print(add_user('admin', 'password', '', 'sha512'))
+    print(delete_user('isaac'))
