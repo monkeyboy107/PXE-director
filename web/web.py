@@ -166,7 +166,7 @@ def register_host(mac_address):
 def boot_host(mac_address):
     if host_management.is_registered(mac_address):
         script = host_management.get_info('ipxe-script', mac=mac_address)
-        script = '\r\n'.join(script['ipxe-script'])
+        script = '\r\n'.join(script)
         return str(script)
 
 
