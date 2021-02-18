@@ -12,11 +12,12 @@
                 <td> <input name="username" type="text" value="{{ user['username'] }}"> </td>
                 <td> <input name="password" type="password" value=""> </td>
                 <td> <input name="salt" type="text" value="{{ user['salt'] }}"> </td>
-                <td> <select name="algorithm" id="algorithm" onselect="{{ user['hash'] }}">
+                <td> <select name="algorithm" id="algorithm">
                         {% for algorithm in algorithms %}
-                        <option value="{{ algorithm }}"> {{ algorithm }} </option>
+                            <option value="{{ algorithm }}" {% if user['hash'] == algorithm %}:
+                                selected="selected"
+                            {% endif %}>  {{ algorithm }} </option>
                         {% endfor %}
-<!--                        <option value="{{ user['hash'] }}"> {{ user['hash'] }} </option>-->
                     </select>
             </tr>
         </table>
