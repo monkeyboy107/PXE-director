@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% block body %}
+<a href="/new_user"> new user </a>
+<table>
+    <tr>
+        <td> username </td>
+        <td> edit </td>
+        <td> delete </td>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td> {{ user['username'] }} </td>
+        <td> <a href="/manage_users/update/{{ user['username'] }}"> edit </a>
+        <td> <a href="/manage_users/delete/{{ user['username'] }}"> delete </a>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
