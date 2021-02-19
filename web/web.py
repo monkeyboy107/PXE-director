@@ -142,7 +142,8 @@ def add_user():
             return redirect(url_for('manage_users'))
         else:
             return render_template('user.html', title='Add a user', pages=common_tools.get_links(is_logged_on=True),
-                               css=common_tools.get_css(), user={'username', 'salt', 'hash'}, algorithms=types_of_hash)
+                                    css=common_tools.get_css(), user={'username' 'salt' 'hash': 'sha256'},
+                                    algorithms=types_of_hash)
     else:
         return is_signed_in(current_user)
 
@@ -165,7 +166,7 @@ def register_host(mac_address):
 def boot_host(mac_address):
     if host_management.is_registered(mac_address):
         script = host_management.get_info('ipxe-script', mac=mac_address)
-        script = '\r\n'.join(script['ipxe-script'])
+        script = '\r\n'.join(script)
         return str(script)
 
 

@@ -1,5 +1,4 @@
-hash: sha1
-password: e60d30af2a6ac65e9fd29f79db43ffd61de3b6e6
-salt: nZI75u;,gXoCsIFZd-^gKBCZTW=5N*@VI lf F!YU+W-QvXxdVIKiw'Xg021?vG+xU5sF7;aM@L6Ojk?Vg#G?wqB
-  &kwx52ZjwF?
+hash: sha512
+password: 39774da53907b7450000170682879b3163ea0a659f8db878c96390630fba82cebd7b967bf02b6c9478d3f2955ff9b68ab59810a742d60d171c7ff48538f52eaf
+salt: '%TeyW-$"!Jur> p/Eof.+.Il$dyW>heVw"CFKJ+:j S@yh^n2WAX8WRh"NK.'',-6&CCx8"B_3QXX\T0XFxhA72t*=''?i,?cIcW1f'
 username: admin
