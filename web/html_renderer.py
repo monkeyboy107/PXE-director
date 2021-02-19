@@ -1,7 +1,6 @@
 from flask import url_for, render_template
 import common_tools
 
-
 settings = common_tools.correct_path('settings/html_renderer.yaml')
 
 

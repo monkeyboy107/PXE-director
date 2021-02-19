@@ -1,3 +1,4 @@
 Hosts: /hosts
+Users: /manage_users
 Settings: /settings
 Logout: /logout
