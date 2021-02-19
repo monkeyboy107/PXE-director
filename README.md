@@ -5,6 +5,7 @@ It will need the following packages
 * flask-login
 * secrets
 * pyyaml
+* pyOpenSSL
 
 ## Starting it up
 Go to the web folder and launch the manager.py within the venv
@@ -19,9 +20,10 @@ This is intended to help you manage PXE hosts through automating iPXE
 * Host management through web
 * Web based user management
 * Hashed passwords
+* TLS
 
 ## Future features
-* TLS
+
 
 ## Credits
 * Isaac Kerley

@@ -1,8 +1,3 @@
-import os
-# os.chdir('web')
-print(os.listdir('.'))
-print(os.getcwd())
-
 import generate_SSL_cert
 import common_tools
 import argparse
