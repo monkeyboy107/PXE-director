@@ -4,6 +4,7 @@ import common_tools
 settings = common_tools.correct_path('settings/html_renderer.yaml')
 
 
+# This is here currently as legacy and will be removed
 def get_html(debug=False, template='layout.html', title='Title', statics_dir='static', css=['style.css'],
              is_logged_on=False, user=None, hosts=None):
     user = str(user)

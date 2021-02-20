@@ -1,0 +1,3 @@
+[submodule "web/PXE-director.wiki"]
+	path = wiki
+	url = https://github.com/monkeyboy107/PXE-director.wiki.git

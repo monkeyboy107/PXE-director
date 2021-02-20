@@ -11,7 +11,15 @@
         <div class="w3-black kerley-links kerley-middle">
             {% for name, href in pages %}<a href="{{ href }}">{{ name }}</a> {% endfor %}
         </div>
-        </div>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+                <div class="kerley-middle w3-text-red"> <li>{{ message }}</li> </div>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
         <div class="kerley-middle">
             {% block body %}{% endblock %}
         </div>

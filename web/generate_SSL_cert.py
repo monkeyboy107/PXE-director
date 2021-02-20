@@ -1,12 +1,15 @@
-from OpenSSL import crypto, SSL
+from OpenSSL import crypto
 import common_tools
 
 
+# This sets where it will pull settings from
 settings = common_tools.yaml_to_dict(common_tools.correct_path('settings/generate_SSL_cert.yaml'))
 
-def cert_gen(serialNumber=0, validityStartInSeconds=0, validityEndInSeconds=10*365*24*60*60):
-    #can look at generated file using openssl:
-    #openssl x509 -inform pem -in selfsigned.crt -noout -text
+
+# This generates the self signed SSL certificate
+def cert_gen(serialNumber=0, validityEndInSeconds=10*365*24*60*60):
+    # Can look at generated file using openssl:
+    # openssl x509 -inform pem -in selfsigned.crt -noout -text
     # create a key pair
     k = crypto.PKey()
     k.generate_key(crypto.TYPE_RSA, 4096)

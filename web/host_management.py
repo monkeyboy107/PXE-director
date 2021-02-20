@@ -36,11 +36,17 @@ def is_valid_mac(mac):
     return valid
 
 
+# This registers the new host
 def register_host(mac):
+    # This loads the default settings from the default_settings file fake host as a template
     default_settings = common_tools.yaml_to_dict(common_tools.correct_path(settings['default_settings']))
+    # This sets the default mac
     default_settings['mac'] = mac
+    # This sets the default file
     filename = common_tools.correct_path(settings['hosts'] + '/' + mac.replace(':', '') + '.yaml')
+    # This writes the new file
     common_tools.dict_to_yaml(filename, default_settings)
+    # This returns what was written and where for troubleshooting
     return (filename, default_settings)
 
 
@@ -58,7 +64,9 @@ def is_registered(mac):
 
 # This will update the mac address of a specific host
 def update_host(mac, value, key):
+    # This checks if the value being looked for is mac
     if value == 'mac':
+        # This checks if the mac is valid
         if is_valid_mac(value) is False:
             return False
     # This will define the host as its dictionary
