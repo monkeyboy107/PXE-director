@@ -130,11 +130,11 @@ def get_info(desired_info, mac=None):
 if __name__ == '__main__':
     testing_mac = 'FF:FF:FF:FF:FF:FF'
     testing_description = 'This is a test will remove later'
-    print(is_valid_mac(testing_mac))
-    print(register_host(testing_mac))
-    print(is_registered(testing_mac))
-    # for key in ['host', 'mac', 'description', 'ipxe-script']:
-    #     print(update_host(testing_mac, testing_description, key))
+    # print(is_valid_mac(testing_mac))
+    # print(register_host(testing_mac))
+    # print(is_registered(testing_mac))
+    for key in ['host', 'mac', 'description', 'ipxe-script']:
+        print(update_host(testing_mac, testing_description, key))
     # print(remove_host(testing_mac))
     # for desired_info in ['host', 'mac', 'description', 'ipxe-script']:
     #     print(get_info(desired_info))

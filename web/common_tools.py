@@ -69,7 +69,7 @@ def test_auth(username, password):
 
 
 # This loads the web links
-def get_links(is_logged_on=False):
+def get_pages(is_logged_on=False):
     # This loads the web links into a list for non authenticated users
     web_links = [yaml_to_dict(settings)['links_path']]
     # This check if the user is signed in so it can add more links
@@ -208,6 +208,7 @@ if __name__ == '__main__':
     # print(test_auth('test', 'test'))
     # print(test_auth('admin', 'password'))
     # print(correct_path('hosts\\default.yaml'))
-    # print(get_links(is_logged_on=True))
+    print(get_pages(is_logged_on=True))
+    print(get_pages(is_logged_on=False))
     # print(add_user('admin', 'password', '', 'sha512'))
-    print(delete_user('isaac'))
+    # print(delete_user('isaac'))
