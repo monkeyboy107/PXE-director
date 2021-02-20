@@ -9,9 +9,11 @@ parser.add_argument('--new-user', help='This will add a new user through CLI. Re
 parser.add_argument('--user-password', help='This will add a new user password through CLI. Requires --user-password')
 parser.add_argument('--regen-ssl', help='This will regenerate SSL key and cert')
 
+
 args = parser.parse_args()
 none_count = 0
 
+# This checks if the parser is being used
 if args.regen_ssl is not None:
     generate_SSL_cert.cert_gen()
 else:
@@ -23,6 +25,7 @@ elif args.new_user is not None or args.user_password is not None:
 else:
     none_count = none_count + 1
 
+# If the parser is not being used then it will go through first run setup
 if none_count == 2:
     print('Welcome to PXE-director.')
     username = input('Please put in a username! ')
