@@ -1,7 +1,6 @@
 from flask import Flask, request, flash, url_for, redirect, abort, render_template
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
 import host_management
-import html_renderer
 import common_tools
 import os
 
@@ -30,14 +29,9 @@ class User(UserMixin):
         return self
 
 
-# This defines the root path. Likely will remove in future and have it route to login
-@app.route('/')
-@login_manager.unauthorized_handler
-def index():
-    return html_renderer.get_html(title='Index', template='index.html', user=current_user)
-
-
 # This defines the route to login the user
+@login_manager.unauthorized_handler
+@app.route('/')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     # This defines the form to make it easier to reference
@@ -58,27 +52,28 @@ def login():
         # This returns to the login page
         return redirect((url_for('login')))
     # This renders the template
-    return html_renderer.get_html(template='login.html', title='Sign In', user=current_user)
+    return render_template('login.html', title='Sign In', css=common_tools.get_css(),
+                           pages=common_tools.get_pages(is_logged_on=is_logged_on(current_user)))
 
 
 # This is for viewing the current hosts
 @app.route('/hosts')
 def hosts():
     # This checks if the user is signed in before letting them have access to do anything
-    if is_signed_in(current_user) is True:
+    if is_logged_on(current_user):
         # This returns the hosts
-        return html_renderer.get_html(template='hosts.html', title='List of hosts', user=current_user,
-                                      hosts=host_management.get_info('host'))
+        return render_template('hosts.html', title='List of hosts', hosts=host_management.get_info('host'),
+                               css=common_tools.get_css(), pages=common_tools.get_pages(is_logged_on(current_user)))
     else:
         # This will redirect the user if they are not signed in
-        return is_signed_in(current_user)
+        return redirect(url_for('login'))
 
 
 # This the user edit a host
 @app.route('/hosts/<mac_address>', methods=['GET', 'POST'])
 def edit_host(mac_address):
     # This checks if the user is signed in
-    if is_signed_in(current_user) is True:
+    if is_logged_on(current_user) is True:
         # This checks if the user is trying to post data back after updating a host
         if request.method == 'POST':
             # This loads the description from the posted data
@@ -99,29 +94,31 @@ def edit_host(mac_address):
             return redirect(url_for('hosts'))
         else:
             # If not post this will return to the edit host page
-            return html_renderer.get_html(template='edit_host.html',
-                                          hosts=host_management.get_info('host', mac=mac_address))
+            return render_template('edit_host.html', hosts=host_management.get_info('host', mac=mac_address),
+                                   css=common_tools.get_css(),
+                                   pages=common_tools.get_pages(is_logged_on=is_logged_on(current_user)))
     else:
         # If the user isn't signed in it will redirect
-        return is_signed_in(current_user)
+        return redirect(url_for('login'))
 
 
 # This will be where you can edit the yaml files
 @app.route('/settings')
 def settings():
     # This checks if the user is signed in
-    if is_signed_in(current_user) is True:
-        return html_renderer.get_html(title='Settings', template='settings.html', user=current_user)
+    if is_logged_on(current_user):
+        return render_template('settings.html', title='Settings', user=current_user, css=common_tools.get_css(),
+                               pages=common_tools.get_pages(is_logged_on=is_logged_on(current_user)))
     else:
         # This will redirect
-        return is_signed_in(current_user)
+        return redirect(url_for('login'))
 
 
 # This loads the all the users for editing and adding new users
 @app.route('/manage_users')
 def manage_users():
     # This checks if the user is signed in
-    if is_signed_in(current_user):
+    if is_logged_on(current_user):
         # This loads the user list
         users = []
         # This loads the settings with the correct path
@@ -135,17 +132,17 @@ def manage_users():
             # This appends the users folder with the dicts of every user
             users.append((common_tools.yaml_to_dict(common_tools.correct_path(settings['users'] + '/' + user))))
         return render_template('user_manager.html', title='Manage users',
-                               pages=common_tools.get_links(is_logged_on=True), css=common_tools.get_css(), users=users)
+                               pages=common_tools.get_pages(is_logged_on=True), css=common_tools.get_css(), users=users)
     else:
         # This will redirect the user who isn't signed in
-        return is_signed_in(current_user)
+        return redirect(url_for('login'))
 
 
 # This updates a user
 @app.route('/manage_users/update/<username>')
 def update_user(username):
     # This checks if the user is signed in
-    if is_signed_in(current_user):
+    if is_logged_on(current_user):
         # This checks loads the user_dir that is to be updated
         users_dir = common_tools.yaml_to_dict(common_tools.correct_path('settings/authentication.yaml'))['auth_dir']
         # This goes through every user
@@ -155,21 +152,21 @@ def update_user(username):
             if dict_user['username'] == username:
                 # This returns the user information after it renders it
                 return render_template('user.html', title='Update user ' + username, css=common_tools.get_css(),
-                                       pages=common_tools.get_links(is_logged_on=True), user=dict_user,
+                                       pages=common_tools.get_pages(is_logged_on=True), user=dict_user,
                                        algorithms=types_of_hash)
         # If the user is not found this will flash it
         flash('User not found')
         return redirect(url_for('manage_users'))
     else:
         # This redirects users who aren't signed in
-        return is_signed_in(current_user)
+        return redirect(url_for('login'))
 
 
 # This deletes a user
 @app.route('/manage_users/delete/<username>')
 def delete_user(username):
     # This checks that the person trying to delete a user is signed in
-    if is_signed_in(current_user):
+    if is_logged_on(current_user):
         # This loads the users folder
         users_dir = common_tools.yaml_to_dict(common_tools.correct_path('settings/authentication.yaml'))['auth_dir']
         # This goes through every user
@@ -188,14 +185,14 @@ def delete_user(username):
     else:
         # This flashes that the user was deleted
         flash(username + ' has been deleted')
-        return is_signed_in(current_user)
+        return redirect(url_for('login'))
 
 
 # This will generate a new user
 @app.route('/new_user', methods=['GET', 'POST'])
 def add_user():
     # This checks if the person trying to add a new user is signed in
-    if is_signed_in(current_user):
+    if is_logged_on(current_user):
         # This checks if it is posting data
         if request.method == 'POST':
             # This makes sure that the password field IS NOT empty
@@ -207,12 +204,12 @@ def add_user():
             return redirect(url_for('manage_users'))
         else:
             # This goes to the signed in user section
-            return render_template('user.html', title='Add a user', pages=common_tools.get_links(is_logged_on=True),
-                                    css=common_tools.get_css(), user={'username' 'salt' 'hash': 'sha256'},
-                                    algorithms=types_of_hash)
+            return render_template('user.html', title='Add a user', pages=common_tools.get_pages(is_logged_on=True),
+                                   css=common_tools.get_css(), user={'username' 'salt' 'hash': 'sha256'},
+                                   algorithms=types_of_hash)
     else:
         # This redirects not signed in users
-        return is_signed_in(current_user)
+        return redirect(url_for('login'))
 
 
 # This logs out the current user
@@ -221,7 +218,7 @@ def logout():
     # This logs out the user
     logout_user()
     # This redirects the logged out user
-    return redirect(url_for('index'))
+    return redirect((url_for('login')))
 
 
 # This will register a new mac address. Or return the fact that the host is already registered
@@ -257,10 +254,10 @@ def load_user(user_id):
 
 
 # This checks if the user is signed in
-def is_signed_in(current_user):
+def is_logged_on(current_user):
     # If the first letter is a < then the user is likely not signed in
     if str(current_user)[0] == '<':
-        return redirect(url_for('index'))
+        return False
     else:
         return True
 

@@ -1,0 +1,10 @@
+cert_folder: ssl_cert
+cert_file: cert.crt
+key_file: key.key
+countryName: NT
+stateOrProvinceName: None
+localityName: None
+organizationName: None
+organizationUnitName: None
+commonName: None
+emailAddress: None
