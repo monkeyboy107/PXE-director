@@ -1,26 +1,37 @@
 from flask import url_for, render_template
-import common_tools
+import utils
 
-settings = common_tools.correct_path('settings/html_renderer.yaml')
+settings = utils.correct_path('settings/html_renderer.yaml')
 
 
-# This is here currently as legacy and will be removed
 def get_html(debug=False, template='layout.html', title='Title', statics_dir='static', css=['style.css'],
              is_logged_on=False, user=None, hosts=None):
+    '''
+    This is here currently as legacy and will be removed
+    :param debug: If you are debugging then set this to be True
+    :param template: The string of the name of the template
+    :param title: The title of the html page
+    :param statics_dir: Where you have CSS files
+    :param css: A list of strings of the different CSS files
+    :param is_logged_on: If you know the user is signed on then you set this to True
+    :param user: The user's username
+    :param hosts: The host you're referencing
+    :return: The rendered HTML
+    '''
     user = str(user)
     if user[0] != '<':
         is_logged_on = True
     stylesheets = []
     links = []
-    web_links = [common_tools.yaml_to_dict(settings)['links_path']]
+    web_links = [utils.yaml_to_dict(settings)['links_path']]
 
     # This check if the user is signed in so it can add more links
     if is_logged_on:
-        web_links.append(common_tools.yaml_to_dict(settings)['logged_on_links_path'])
+        web_links.append(utils.yaml_to_dict(settings)['logged_on_links_path'])
 
     # This will prep the list being handed to jinja
     for dict in web_links:
-        links.append(get_links(common_tools.yaml_to_dict(dict)))
+        links.append(get_links(utils.yaml_to_dict(dict)))
     passable = []
 
     # This combines the lists for jinja
@@ -48,6 +59,11 @@ def get_html(debug=False, template='layout.html', title='Title', statics_dir='st
 
 
 def get_links(links_dict):
+    '''
+    This will return links as a nicely usable dictonary
+    :param links_dict: The dictonary
+    :return: returns the list
+    '''
     pages = []
     # links_path = common_tools.correct_path(common_tools.yaml_to_dict(links_dict)['links_path'])
     # links = common_tools.yaml_to_dict(links_path)

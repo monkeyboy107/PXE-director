@@ -5,11 +5,17 @@ import os
 import yaml
 
 
-# This makes checks if you're in windows or not. If it is in windows then it will correct the path appropriately.
-# E.G. if it is windows and is given a windows path, it will return the same path. If it is linux and given a linux path
-#   it will then return the same path. But if it is given a windows path on a linux system it will return a linux path.
-# In addition the reverse is true.
+
 def correct_path(path):
+    '''
+    This makes checks if you're in windows or not. If it is in windows then it will correct the path appropriately.
+    E.G. if it is windows and is given a windows path, it will return the same path. If it is linux and given a linux
+      path it will then return the same path. But if it is given a windows path on a linux system it will return a linux
+      path.
+    In addition the reverse is true.
+    :param path: A path you want corrected
+    :return: The corrected path
+    '''
     # This sets the salsh to be a fordslash
     dir_slash = '/'
     # This asks if it is running windows
@@ -24,8 +30,12 @@ def correct_path(path):
     return path
 
 
-# This is to directly load a yaml file as a dict
 def yaml_to_dict(path_to_yaml):
+    '''
+    This is to directly load a yaml file as a dict
+    :param path_to_yaml: A path to the yaml file
+    :return: A dictionary that loaded from the yaml file
+    '''
     # This will open the file that was handed to it
     with open(path_to_yaml) as stream:
         # This will read the data using pyYAML
@@ -34,22 +44,32 @@ def yaml_to_dict(path_to_yaml):
     return data
 
 
-# This writes to a yaml file
 def dict_to_yaml(path_to_yaml, data):
+    '''
+    This writes to a yaml file
+    :param path_to_yaml: The yaml you want written
+    :param data: The data you want written to yaml
+    :return: None because this is written to a file
+    '''
     # This will open the yaml file in writable form
     with open(path_to_yaml, 'w+') as stream:
         # This writes to the the yaml file
         yaml.safe_dump(data, stream)
 
 
-# This is to test authentication to see if the password is correct
 def test_auth(username, password):
+    '''
+    This is to test authentication to see if the password is correct
+    :param username: The username you want tested
+    :param password: The password for that username
+    :return: If the creds work it will return True else it will return False
+    '''
     # This loads the settings
     settings = yaml_to_dict(correct_path('settings/authentication.yaml'))
     # This will go through every single user in the users folder
     for user in os.listdir(settings['auth_dir']):
         # This gets the dictionary of the user to check the password and user
-        user_dict = yaml_to_dict(correct_path(settings['auth_dir'] + '/' + user))
+        user_dict = yaml_to_dict(correct_path(f"{settings['auth_dir']}/user"))
         # This checks if the user it loaded is the correct user
         if user_dict['username'] == username:
             # This loads in the hash algorithm
@@ -68,8 +88,12 @@ def test_auth(username, password):
     return False
 
 
-# This loads the web links
 def get_pages(is_logged_on=False):
+    '''
+    This loads the web links
+    :param is_logged_on: If the user is signed in this will load more pages
+    :return: Returns the links
+    '''
     # This loads the web links into a list for non authenticated users
     web_links = [yaml_to_dict(settings)['links_path']]
     # This check if the user is signed in so it can add more links
@@ -91,6 +115,13 @@ def get_pages(is_logged_on=False):
 
 
 def get_css(css=['style.css'], statics_dir='static', debug=False):
+    '''
+    Gets the CSS files for flask
+    :param css: list of strings for the name of the css files
+    :param statics_dir: The dir that the css file(s) live in
+    :param debug: If this is being debugged set to True so you dont get an error from url_for
+    :return:
+    '''
     # This converts the style sheets into a nice iterable format
     stylesheets = []
     # This goes through all the stylesheets files in the css list and formats the way it needs to be returned
@@ -107,8 +138,14 @@ def get_css(css=['style.css'], statics_dir='static', debug=False):
     return stylesheets
 
 
-# This salts and hashes the password
 def hash_password(password, hash, *salts):
+    '''
+    This salts and hashes the password
+    :param password: The password to be hashsed
+    :param hash: The hashing algorithm
+    :param salts: The salts to append
+    :return: The hashed password
+    '''
     # This makes the hash variable lower case
     hash = hash.lower()
     # This checks if sha1 is being used
@@ -150,8 +187,15 @@ def hash_password(password, hash, *salts):
     return hashed.hexdigest()
 
 
-# This adds a new user
 def add_user(username, password, salt, hash):
+    '''
+    This adds a new user
+    :param username: The username you want to add
+    :param password: The password for the user
+    :param salt: The salt for the end of the username
+    :param hash: The hashing algorithm
+    :return: The user's dictonary
+    '''
     if salt == '':
         # This defines every single character as a list. Im planning to make this into a yaml file that will get loaded
         every_char = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
@@ -171,7 +215,7 @@ def add_user(username, password, salt, hash):
     # This gets the directory where the users are to be stored
     users_folder = settings['auth_dir']
     # This builds teh full path to the user's file
-    user_yaml_path = correct_path(users_folder + '/' + username + '.yaml')
+    user_yaml_path = correct_path(f"{users_folder}/{username}.yaml")
     # This hashes the password
     hashed_password = hash_password(password, hash, username, salt)
     # This writes the user's dictonary
@@ -183,6 +227,11 @@ def add_user(username, password, salt, hash):
 
 
 def delete_user(username):
+    '''
+    This will delete a username that you want removed
+    :param username: The username of the person you want removed
+    :return: Either the path that was removed or a user not found error
+    '''
     # This gets the user's folder
     folder = yaml_to_dict(correct_path('settings/authentication.yaml'))['auth_dir']
     # This looks at every single file in the folder variable
@@ -190,7 +239,7 @@ def delete_user(username):
     # This goes to every single file in users_folder variable to check if the user is the one to be deleted
     for user in users_folder:
         # This builds the path to the user's yaml file
-        user_yaml = correct_path(folder + '/' + user)
+        user_yaml = correct_path(f"{folder}/{user}")
         # This checks if the user is the correct one
         if username == yaml_to_dict(user_yaml)['username']:
             # This will remove the user

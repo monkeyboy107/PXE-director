@@ -1,5 +1,5 @@
 import generate_SSL_cert
-import common_tools
+import utils
 import argparse
 
 description = 'You should run this first. You can rerun this in case something breaks too'
@@ -19,7 +19,7 @@ if args.regen_ssl is not None:
 else:
     none_count = none_count + 1
 if args.new_user is not None and args.user_password is not None:
-    common_tools.add_user(args.new_user, args.user_password, '', 'sha512')
+    utils.add_user(args.new_user, args.user_password, '', 'sha512')
 elif args.new_user is not None or args.user_password is not None:
     print('requies both --new-user and --user-password')
 else:
@@ -30,7 +30,7 @@ if none_count == 2:
     print('Welcome to PXE-director.')
     username = input('Please put in a username! ')
     password = input('Please put in a password! ')
-    common_tools.add_user(username, password, '', 'sha512')
+    utils.add_user(username, password, '', 'sha512')
     print('Please note if you run into trouble you can rerun this like the following '
           '\'python3 RUN-ME-FIRST-TO-SETUP.py --username USERNAME --password PASSWORD\'')
     generate_SSL_cert.cert_gen()
