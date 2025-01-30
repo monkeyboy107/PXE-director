@@ -1,7 +1,21 @@
  <!DOCTYPE html>
 <html>
+<head>
+  {%- if title %}
+  <title> {{ title }}</title>
+  {%- else %}
+  <title> PXE-director </title>
+  {% endif %}
+  <link rel='stylesheet' href='{{ url_for("static", filename="styles.css") }}'>
+</head>
 <body>
-{% block body %}
-{% endblock %}
+<div class='topnav'>
+  <a class='/active' href='/'> Home </a>
+  <a href='/login'> Login </a>
+  <a href='/users'> Users </a>
+  <a href='/scripts'> Scripts </a>
+</div>
+{%- block body %}
+{%- endblock %}
 </body>
 </html>
