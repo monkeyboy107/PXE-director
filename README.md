@@ -1,5 +1,6 @@
 ## Credits
 * Isaac Kerley
+* Jo Kerley
 
 ## Hacking
 ### Vagrant
