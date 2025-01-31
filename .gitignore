@@ -1,1 +1,6 @@
-/venv/
+.nogit
+.cache
+.vagrant
+.vagrant.d
+.idea
+.DS_Store
