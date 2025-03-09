@@ -2,5 +2,6 @@
 *.pyc
 *__pycache__*
 *.swp
+flask_session/*
 web/flask_session/*
 database.db

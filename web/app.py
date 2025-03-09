@@ -11,14 +11,6 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=5)
 
 Session(app)
 
-# Wanting to ensure that the session username is maintained.
-def add_username(values):
-  if login_check():
-    values['username'] = session['username']
-    values['name'] = session['username'] # This is placeholder. In the future I want to be able to reference the actual name
-                                         # But for now I can live with just referencing the user's name
-  return values
-
 def login_check():
   if 'username' in session:
     if session['username']:
@@ -28,20 +20,21 @@ def login_check():
 # Renders the index page
 @app.route('/')
 def index():
-  values = add_username({})
-  return render_template('index.html.j2', **values)
+  return render_template('index.html.j2', user=session['username'])
 
 # Renders login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-  values = {'title': 'Please sign in'}
-  values = add_username(values)
   if request.method == 'POST':
     if UserManagement.test_authentication(request.form.get('username'), request.form.get('password')):
       session['username'] = request.form.get('username')
     return redirect('/')
   else:
-    return render_template('login.html.j2', **values)
+    form = [
+           {'id': 'username', 'title': 'Username', 'type': 'text', 'placeholder': 'Enter your username', 'value': ''},
+           {'id': 'password', 'title': 'Password', 'type': 'password', 'placeholder': 'Enter your password', 'value': ''}
+           ]
+    return render_template('form.html.j2', form=form, title='Please sign in', name=session['username'])
 
 # Logs out the user
 @app.route('/logout')
@@ -53,27 +46,63 @@ def logout():
 @app.route('/users/')
 def users():
   if login_check():
-    values = add_username({})
-    # return render_template('users.html.j2', **values)
-    return str(values['name'])
+    users = [{'name': user.username} for user in UserManagement.find_all_users()]
+    return render_template('edit_users.html.j2', users=users)
   else:
     return redirect('/login')
 
 
 # Edit a specific user
-@app.route('/users/<username>')
+@app.route('/users/<username>', methods=['GET', 'POST'])
 def edit_user(username):
   if login_check():
-    values = add_username({})
-    # return render_template('edit_user.html.j2', **values)
-    # return render_template('form.html.j2') 
-    return username
+    user = UserManagement.find_user(username)
+    if request.method == 'POST':
+      display_name = request.form.get('display_name')
+      email = request.form.get('email')
+      nickname = request.form.get('nickname')
+      password = request.form.get('password')
+      fields = {}
+      if display_name != user.display_name:
+        fields['display_name'] = display_name
+      if email != user.email:
+        fields['email'] = email
+      if nickname != user.nickname:
+        fields['nickname'] = nickname
+      if password:
+        fields['password'] = password
+      UserManagement.update_field(user.username, **fields)
+    form = [
+            {'id': 'display_name', 'title': 'Display name', 'type': 'text', 'placeholder': 'Users display name', 'value': user.display_name},
+            {'id': 'email', 'title': 'Email', 'type': 'text', 'placeholder': 'Users email', 'value': user.email},
+            {'id': 'nickname', 'title': 'Nickname', 'type': 'text', 'placeholder': 'Users nickname', 'value': user.nickname}
+           ]
+    if username != session['username']:
+      form.append({'id': 'password', 'title': 'Password', 'type': 'password', 'placeholder': 'Reset password to'})
+    return render_template('form.html.j2', form=form)
   else:
     return redirect('/login')
 
+# Add a user
+# @app.route('/users/<username>/add', methods=['GET', 'POST'])
+
+
+# Delete a user
+@app.route('/users/<username>/delete', methods=['GET', 'POST'])
+def delete_user(username):
+  if login_check() and session['username'] != username:
+    if request.method == 'POST':
+      print(request.form.get('delete'))
+      if request.form.get('delete') == 'on':
+        UserManagement.delete_user(username)
+      return redirect('/users')
+    return render_template('delete_user.html.j2', username=username)
+  return redirect('/login')
+
+# Changes current user's password
 @app.route('/users/<username>/password', methods=['GET', 'POST'])
 def update_password(username):
-  if login_check():
+  if login_check(): 
     if request.method == 'POST':
       user = session['username']
       old_password = request.form.get('password')
@@ -83,11 +112,10 @@ def update_password(username):
         if new_password == verify_password:
           UserManagement.reset_password(user, new_password)
         return redirect(f'/users/{session["username"]}/password')
-    values = add_username({})
     form = [
-      {'id': 'password', 'title': 'Current password', 'type': 'password', 'placeholder': 'Current password'},
-      {'id': 'new_password', 'title': 'New password', 'type': 'password', 'placeholder': 'New password'},
-      {'id': 'verify_password', 'title': 'Verify password', 'type': 'password', 'placeholder': 'Verify password'}
+      {'id': 'password', 'title': 'Current password', 'type': 'password', 'placeholder': 'Current password', 'value': ''},
+      {'id': 'new_password', 'title': 'New password', 'type': 'password', 'placeholder': 'New password', 'value': ''},
+      {'id': 'verify_password', 'title': 'Verify password', 'type': 'password', 'placeholder': 'Verify password', 'value': ''}
     ]
     return render_template('form.html.j2', form=form)
   else:

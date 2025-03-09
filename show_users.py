@@ -14,7 +14,10 @@ class Base(DeclarativeBase):
 class User(Base):
   __tablename__ = 'users'
 
-  name = Column(String, primary_key=True)
+  username = Column(String, primary_key=True)
+  display_name = Column(String)
+  nickname = Column(String)
+  email = Column(String)
   password = Column(String)
 
 Base.metadata.create_all(engine)
@@ -22,4 +25,4 @@ Base.metadata.create_all(engine)
 users = session.query(User).all()
 
 for user in users:
-  print(f'The user is {user.name} the hash is {user.password}')
+  print(f'The user is {user.username} the hash is {user.password} and display name of {user.display_name}')
