@@ -1,4 +1,6 @@
 {%- extends 'base.html.j2' %}
 {%- block body %}
+{% for value in values%}
   {{ value }}
+{% endfor %}
 {%- endblock %}

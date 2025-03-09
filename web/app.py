@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, session, redirect
 from flask_session import Session
+from DatabaseManagement import UserManagement
 from datetime import timedelta
 
 # Sets up flask app correctly
@@ -36,7 +37,8 @@ def login():
   values = {'title': 'Please sign in'}
   values = add_username(values)
   if request.method == 'POST':
-    session['username'] = request.form.get('username')
+    if UserManagement.test_authentication(request.form.get('username'), request.form.get('password')):
+      session['username'] = request.form.get('username')
     return redirect('/')
   else:
     return render_template('login.html.j2', **values)
@@ -64,7 +66,30 @@ def edit_user(username):
   if login_check():
     values = add_username({})
     # return render_template('edit_user.html.j2', **values)
-    return str(values['name']) + ' ' + username
+    # return render_template('form.html.j2') 
+    return username
+  else:
+    return redirect('/login')
+
+@app.route('/users/<username>/password', methods=['GET', 'POST'])
+def update_password(username):
+  if login_check():
+    if request.method == 'POST':
+      user = session['username']
+      old_password = request.form.get('password')
+      new_password = request.form.get('new_password')
+      verify_password = request.form.get('verify_password')
+      if UserManagement.test_authentication(user, old_password):
+        if new_password == verify_password:
+          UserManagement.reset_password(user, new_password)
+        return redirect(f'/users/{session["username"]}/password')
+    values = add_username({})
+    form = [
+      {'id': 'password', 'title': 'Current password', 'type': 'password', 'placeholder': 'Current password'},
+      {'id': 'new_password', 'title': 'New password', 'type': 'password', 'placeholder': 'New password'},
+      {'id': 'verify_password', 'title': 'Verify password', 'type': 'password', 'placeholder': 'Verify password'}
+    ]
+    return render_template('form.html.j2', form=form)
   else:
     return redirect('/login')
 

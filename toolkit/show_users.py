@@ -16,11 +16,10 @@ class User(Base):
 
   name = Column(String, primary_key=True)
   password = Column(String)
-  salt = Column(String)
 
 Base.metadata.create_all(engine)
 
 users = session.query(User).all()
 
 for user in users:
-  print(f'The user is {user.name} the hash is {user.password}, the salt is {user.salt}')
+  print(f'The user is {user.name} the hash is {user.password}')
