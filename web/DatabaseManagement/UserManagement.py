@@ -1,19 +1,10 @@
 from sqlalchemy import create_engine, String, Column, Integer
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, registry
 from argon2 import PasswordHasher
-import random
+from DatabaseManagement import common 
 
-# This is where I define engine string... this is a temp, will have it loaded from settings 
-engine = create_engine('sqlite:///database.db')
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
-reg = registry()
-
-# This is the basics we need to make a class
-class Base(DeclarativeBase):
-  registry = reg
+session = common.session
+Base = common.Base
 
 # The actual user class. This is the most important for this
 class User(Base):
@@ -25,7 +16,6 @@ class User(Base):
   email = Column(String)
   password = Column(String)
 
-Base.metadata.create_all(engine)
 
 def add_user(username, password):
   if None == find_user(username):
@@ -73,12 +63,9 @@ def test_authentication(username, password):
     print(f'Failed to authenticate: {e}')
   return result
 
-def update_field(username, **user_field):
+def update_field(username, **user_fields):
   user = find_user(username)
-  for key, value in user_field.items():
-    setattr(user, key, value)
-  session.commit()
-  print(user.display_name)
+  common.update_fields(user, **user_fields)
 
 if '__main__' == __name__: 
   delete_user('Test user')

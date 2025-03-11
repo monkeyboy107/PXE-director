@@ -1,5 +1,8 @@
 {%- extends 'base.html.j2' %}
 {% block body %}
+  <div>
+  <a href=/users/add>Add</a> a new user?
+  </div>
 {%- for user in users %}
   <div>
     {{ user.name }} <a href=/users/{{ user.name }}>edit</a> <a href=/users/{{ user.name }}/delete> delete</a>
