@@ -20,9 +20,7 @@ class User(Base):
 def add_user(username, password):
   if None == find_user(username):
     password_hash = hash_password(password)
-    user = User(username=username, password=password_hash)
-    session.add_all([user])
-    session.commit()
+    common.create_record(User, username=username, password=password)
     return True
   else:
     return False
@@ -32,16 +30,15 @@ def delete_user(username):
   if user == None:
     return False
   else: 
-    session.delete(user)
-    session.commit()
+    common.delete_record(user)
     return User
 
 def find_user(username):
-  user = session.query(User).filter_by(username=username).first()
+  user = common.find_record(User, username=username)
   return user
 
 def find_all_users():
-  users = session.query(User).all()
+  users = common.all_find_record(User)
   return users
 
 def reset_password(username, password):

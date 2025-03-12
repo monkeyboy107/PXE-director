@@ -31,8 +31,8 @@ def logout():
 @user_management.route('/users/')
 def users():
   if tools.login_check():
-    users = [{'name': user.username} for user in UserManagement.find_all_users()]
-    return render_template('edit_users.html.j2', users=users)
+    users = [{'id': user.username} for user in UserManagement.find_all_users()]
+    return render_template('edit_fields.html.j2', fields=users, record_type='user')
   else:
     return redirect('/login')
 
@@ -69,7 +69,7 @@ def edit_user(username):
     return redirect('/login')
 
 # Add a user
-@user_management.route('/users/add', methods=['GET', 'POST'])
+@user_management.route('/user/add', methods=['GET', 'POST'])
 def add_user():
   if tools.login_check():
     if request.method == 'POST':

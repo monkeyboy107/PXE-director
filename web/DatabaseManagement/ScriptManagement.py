@@ -1,31 +1,32 @@
 from sqlalchemy import create_engine, String, Column, Integer
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, registry
+from DatabaseManagement import common
 
-# This is where I define the engine string... this is a temp, will have to loaded from settings
-engine = create_engine('sqlite:///database.db')
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
-reg = registry()
-
-# This is the basics we need to make a class
-class Base(DeclarativeBase):
-  registry = reg
+session = common.session
+Base = common.Base
 
 # The actual script database
-class Script()
+class Script(Base):
   __tablename__ = 'scripts'
   
-  script_id = Column(String, primary_key=True)
-  script_content = Column(String)
-  script_string = Column(String)
+  id = Column(String, primary_key=True)
+  content = Column(String)
+  descrpition = Column(String)
 
-def create_script():
-  pass
+def create_script(id, content, description):
+  common.create_record(Script, id=id, content=content, description=description)
 
-def update_script():
-  pass
+def update_script(**field):
+  common.update_record(Script, **field)
 
-def delete_script():
-  pass
+def delete_script(id):
+  script = find_script(id)
+  commmon.delete_record(script)
+
+def find_script(id):
+  script = common.find_record(Script, id)
+  return script
+
+def find_all_scripts():
+  scripts = common.all_find_record(Script)
+  return scripts

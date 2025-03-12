@@ -1,0 +1,12 @@
+{%- extends 'base.html.j2' %}
+{% block body %}
+  <div>
+  <a href=/{{ record_type }}/add>Add</a> a new {{ record_type }}?
+  </div>
+{%- for field in fields %}
+  <div>
+    {{ field.id }} <a href=/users/{{ field.id }}>edit</a> <a href=/users/{{ field.id }}/delete> delete</a>
+    <br>
+  </div>
+{% endfor %}
+{% endblock %}
