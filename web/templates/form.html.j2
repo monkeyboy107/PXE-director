@@ -1,0 +1,15 @@
+{%- extends 'base.html.j2' %}
+{% block body %}
+  <form action='' method='POST'>
+    {%- for entry in form %}
+    <label for='{{ entry.id }}'>{{ entry.title }}</label>
+    <input type='{{ entry.type }}' id='{{ entry.id }}' name='{{ entry.id }}' placeholder='{{ entry.placeholder }}' {% if entry.value %} value='{{ entry.value }}' {% endif %}>
+    <br>
+    {%- endfor %}
+    {%- for entry in text_area %}
+    <label for={{ entry.id }}>{{ entry.title }}</label>
+    <textarea id='{{ entry.id }}' name='{{ entry.name }}' rows='{{ entry.rows }}' cols='{{ entry.cols }}'></textarea><br>
+    {%- endfor %}
+    <button type='submit'> Submit </button>
+  </form>
+{% endblock %}

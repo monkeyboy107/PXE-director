@@ -1,0 +1,7 @@
+{%- extends 'base.html.j2' %}
+{%- block body %}
+<form action='' method=POST>
+  <label for=delete> Delete {{ username }} </label><input type='checkbox' id='delete' name='delete'><br>
+  <input type='submit' value='Yes'>
+</form>
+{%- endblock %}
